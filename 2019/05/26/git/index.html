@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  
+  <title>Git 指南 | Jeremy&#39;s Blog Site</title>
+  <meta name="description" content="" />
+  <meta name="keywords" content="" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="shortcut icon" href="/">
+  <link rel="alternate" href="/atom.xml" title="Jeremy's Blog Site">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Git 概念以及常用命令">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Git 指南">
+<meta property="og:url" content="http://yoursite.com/2019/05/26/git/index.html">
+<meta property="og:site_name" content="Jeremy&#39;s Blog Site">
+<meta property="og:description" content="Git 概念以及常用命令">
+<meta property="og:locale" content="zh">
+<meta property="article:published_time" content="2019-05-25T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-12-04T11:24:29.128Z">
+<meta property="article:author" content="JeremyTownes">
+<meta property="article:tag" content="git">
+<meta name="twitter:card" content="summary">
+    
+  <link href="https://fonts.googleapis.com/css?family=Inconsolata|Titillium+Web" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
+  <link href='//cdn.bootcss.com/node-waves/0.7.5/waves.min.css' rel='stylesheet'>
+  
+<link rel="stylesheet" href="/style.css">
+
+  <script>
+    function setLoadingBarProgress(num) {
+      document.getElementById('loading-bar').style.width=num+"%";
+    }
+  </script>
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Jeremy's Blog Site" type="application/atom+xml">
+</head>
+
+<body>
+  <div id="loading-bar-wrapper">
+  <div id="loading-bar"></div>
+</div>
+
+
+  <script>setLoadingBarProgress(20)</script> 
+  <header class="l_header">
+	<div class='wrapper'>
+		<div class="nav-main container container--flex">
+			<a class="logo flat-box" href='/' >
+				Jeremy's Blog Site
+			</a>
+			<div class='menu'>
+				<ul class='h-list'>
+					
+						<li>
+							<a class='flat-box nav-home' href='/'>
+								主页
+							</a>
+						</li>
+					
+						<li>
+							<a class='flat-box nav-archives' href='/archives'>
+								归档
+							</a>
+						</li>
+					
+						<li>
+							<a class='flat-box nav-about' href='/about'>
+								关于
+							</a>
+						</li>
+					
+				</ul>
+				<div class='underline'></div>
+			</div>
+			
+				<div class="m_search">
+					<form name="searchform" class="form u-search-form">
+						<input type="text" class="input u-search-input" placeholder="键入搜索" />
+						<span class="icon icon-search"></span>
+					</form>
+				</div>
+			
+			<ul class='switcher h-list'>
+				
+					<li class='s-search'><a href='javascript:void(0)'><span class="icon icon-search flat-box"></span></a></li>
+				
+				<li class='s-menu'><a href='javascript:void(0)'><span class="icon icon-menu flat-box"></span></a></li>
+			</ul>
+		</div>
+		
+		<div class='nav-sub container container--flex'>
+			<a class="logo" class="flat-box" href='javascript:void(0)'>
+				Word of Forks
+			</a>
+
+			<ul class='switcher h-list'>
+				<li class='s-comment'><a href='javascript:void(0)'><span class="icon icon-chat_bubble_outline flat-box"></span></a></li>
+				<li class='s-top'><a href='javascript:void(0)'><span class="icon icon-arrow_upward flat-box"></span></a></li>
+				<li class='s-toc'><a href='javascript:void(0)'><span class="icon icon-format_list_numbered flat-box"></span></a></li>
+			</ul>
+		</div>
+	</div>
+</header>
+<aside class="menu-phone">
+	<nav>
+		
+			<a href="/" class="nav-home nav">
+				主页
+			</a>
+		
+			<a href="/archives" class="nav-archives nav">
+				归档
+			</a>
+		
+			<a href="/about" class="nav-about nav">
+				关于
+			</a>
+		
+	</nav>
+</aside>
+
+    <script>setLoadingBarProgress(40);</script>
+  <div class="l_body">
+    <div class='container clearfix'>
+      <div class='l_main'>
+        <article id="post-git"
+  class="post white-box article-type-post"
+  itemscope itemprop="blogPost">
+	<section class='meta'>
+	<h2 class="title">
+  	<a href="/2019/05/26/git/">
+    	Git 指南
+    </a>
+  </h2>
+	<time>
+	  May 26, 2019
+	</time>
+	
+    
+    <div class='cats'>
+        <a href="/categories/tools/">tools</a>
+    </div>
+
+	</section>
+	
+		<section class="toc-wrapper"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-获取-Git-仓库"><span class="toc-number">1.</span> <span class="toc-text">1. 获取 Git 仓库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#在现有目录中初始化仓库"><span class="toc-number">1.1.</span> <span class="toc-text">在现有目录中初始化仓库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#克隆现有的仓库"><span class="toc-number">1.2.</span> <span class="toc-text">克隆现有的仓库</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-记录每次更新到仓库"><span class="toc-number">2.</span> <span class="toc-text">2. 记录每次更新到仓库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#检查当前文件状态"><span class="toc-number">2.1.</span> <span class="toc-text">检查当前文件状态</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#跟踪新文件"><span class="toc-number">2.2.</span> <span class="toc-text">跟踪新文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#暂存已修改文件"><span class="toc-number">2.3.</span> <span class="toc-text">暂存已修改文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#状态简览"><span class="toc-number">2.4.</span> <span class="toc-text">状态简览</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#忽略文件"><span class="toc-number">2.5.</span> <span class="toc-text">忽略文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查看已暂存和未暂存的修改"><span class="toc-number">2.6.</span> <span class="toc-text">查看已暂存和未暂存的修改</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#提交更新"><span class="toc-number">2.7.</span> <span class="toc-text">提交更新</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#跳过使用暂存区域"><span class="toc-number">2.8.</span> <span class="toc-text">跳过使用暂存区域</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#移除文件"><span class="toc-number">2.9.</span> <span class="toc-text">移除文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#移动文件"><span class="toc-number">2.10.</span> <span class="toc-text">移动文件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-查看提交历史"><span class="toc-number">3.</span> <span class="toc-text">3. 查看提交历史</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#限制输出长度"><span class="toc-number">3.1.</span> <span class="toc-text">限制输出长度</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-撤消操作"><span class="toc-number">4.</span> <span class="toc-text">4. 撤消操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#取消暂存的文件"><span class="toc-number">4.1.</span> <span class="toc-text">取消暂存的文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#撤消对文件的修改"><span class="toc-number">4.2.</span> <span class="toc-text">撤消对文件的修改</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-远程仓库的使用"><span class="toc-number">5.</span> <span class="toc-text">5. 远程仓库的使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#从远程仓库中抓取与拉取"><span class="toc-number">5.1.</span> <span class="toc-text">从远程仓库中抓取与拉取</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#推送到远程仓库"><span class="toc-number">5.2.</span> <span class="toc-text">推送到远程仓库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查看远程仓库"><span class="toc-number">5.3.</span> <span class="toc-text">查看远程仓库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#远程仓库的移除与重命名"><span class="toc-number">5.4.</span> <span class="toc-text">远程仓库的移除与重命名</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-打标签"><span class="toc-number">6.</span> <span class="toc-text">6. 打标签</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#列出标签"><span class="toc-number">6.1.</span> <span class="toc-text">列出标签</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#创建标签"><span class="toc-number">6.2.</span> <span class="toc-text">创建标签</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#附注标签"><span class="toc-number">6.3.</span> <span class="toc-text">附注标签</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#轻量标签"><span class="toc-number">6.4.</span> <span class="toc-text">轻量标签</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#后期打标签"><span class="toc-number">6.5.</span> <span class="toc-text">后期打标签</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#共享标签"><span class="toc-number">6.6.</span> <span class="toc-text">共享标签</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#检出标签"><span class="toc-number">6.7.</span> <span class="toc-text">检出标签</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-Git-别名"><span class="toc-number">7.</span> <span class="toc-text">7. Git 别名</span></a></li></ol></section>
+	
+	<section class="article typo">
+  	<div class="article-entry" itemprop="articleBody">
+    	<p>Git 概念以及常用命令</p>
+<a id="more"></a>
+
+<h2 id="1-获取-Git-仓库"><a href="#1-获取-Git-仓库" class="headerlink" title="1. 获取 Git 仓库"></a>1. 获取 Git 仓库</h2><h3 id="在现有目录中初始化仓库"><a href="#在现有目录中初始化仓库" class="headerlink" title="在现有目录中初始化仓库"></a>在现有目录中初始化仓库</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git init</span><br></pre></td></tr></table></figure>
+
+<h3 id="克隆现有的仓库"><a href="#克隆现有的仓库" class="headerlink" title="克隆现有的仓库"></a>克隆现有的仓库</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/libgit2/libgit2 mylibgit</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="2-记录每次更新到仓库"><a href="#2-记录每次更新到仓库" class="headerlink" title="2. 记录每次更新到仓库"></a>2. 记录每次更新到仓库</h2><h3 id="检查当前文件状态"><a href="#检查当前文件状态" class="headerlink" title="检查当前文件状态"></a>检查当前文件状态</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git status</span><br></pre></td></tr></table></figure>
+<h3 id="跟踪新文件"><a href="#跟踪新文件" class="headerlink" title="跟踪新文件"></a>跟踪新文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git add README</span><br><span class="line">git status</span><br></pre></td></tr></table></figure>
+<h3 id="暂存已修改文件"><a href="#暂存已修改文件" class="headerlink" title="暂存已修改文件"></a>暂存已修改文件</h3><h3 id="状态简览"><a href="#状态简览" class="headerlink" title="状态简览"></a>状态简览</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git status --short</span><br><span class="line">git status -s</span><br></pre></td></tr></table></figure>
+<h3 id="忽略文件"><a href="#忽略文件" class="headerlink" title="忽略文件"></a>忽略文件</h3><p>使用 .gitignore 文件</p>
+<ul>
+<li>所有空行或者以 ＃ 开头的行都会被 Git 忽略。</li>
+<li>可以使用标准的 glob 模式匹配。</li>
+<li>匹配模式可以以（/）开头防止递归。</li>
+<li>匹配模式可以以（/）结尾指定目录。</li>
+<li>要忽略指定模式以外的文件或目录，可以在模式前加上惊叹号（!）取反。</li>
+</ul>
+<p>glob 模式</p>
+<ul>
+<li>星号（*）匹配零个或多个任意字符；</li>
+<li>[abc] 匹配任何一个列在方括号中的字符；</li>
+<li>问号（?）只匹配一个任意字符；</li>
+<li>如果在方括号中使用短划线分隔两个字符，表示所有在这两个字符范围内的都可以匹配；</li>
+<li>使用两个星号（*) 表示匹配任意中间目录。</li>
+</ul>
+<h3 id="查看已暂存和未暂存的修改"><a href="#查看已暂存和未暂存的修改" class="headerlink" title="查看已暂存和未暂存的修改"></a>查看已暂存和未暂存的修改</h3><ul>
+<li>查看尚未暂存的文件更新了哪些部分</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git diff</span><br></pre></td></tr></table></figure>
+
+
+<ul>
+<li>查看已暂存的将要添加到下次提交里的内容</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git diff --staged</span><br><span class="line">git diff --cached</span><br></pre></td></tr></table></figure>
+
+<h3 id="提交更新"><a href="#提交更新" class="headerlink" title="提交更新"></a>提交更新</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git commit -m <span class="string">"first commit"</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="跳过使用暂存区域"><a href="#跳过使用暂存区域" class="headerlink" title="跳过使用暂存区域"></a>跳过使用暂存区域</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git commit -a -m <span class="string">"second commit"</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="移除文件"><a href="#移除文件" class="headerlink" title="移除文件"></a>移除文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git rm [file_name]</span><br></pre></td></tr></table></figure>
+
+<p>把文件从 Git 仓库中删除，文件保留在当前工作目录中</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git rm --cached [file_name]</span><br></pre></td></tr></table></figure>
+
+<h3 id="移动文件"><a href="#移动文件" class="headerlink" title="移动文件"></a>移动文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git mv file_from file_to</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="3-查看提交历史"><a href="#3-查看提交历史" class="headerlink" title="3. 查看提交历史"></a>3. 查看提交历史</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">log</span></span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">log</span> -p -2 <span class="comment"># -p 显示每次提交的内容差异，-2 仅显示最近两次提交</span></span><br><span class="line">git <span class="built_in">log</span> --<span class="built_in">stat</span> <span class="comment"># 查看提交的简略的统计信息</span></span><br><span class="line">git <span class="built_in">log</span> --oneline <span class="comment"># 将每个提交放在一行显示</span></span><br><span class="line">git <span class="built_in">log</span> --short</span><br><span class="line">git <span class="built_in">log</span> --full</span><br><span class="line">git <span class="built_in">log</span> --fuller</span><br><span class="line">git <span class="built_in">log</span> --pretty=online</span><br><span class="line">git <span class="built_in">log</span> --pretty=format:<span class="string">"%h - %an, %ar : %s"</span> --graph <span class="comment"># 定制要显示的记录格式</span></span><br></pre></td></tr></table></figure>
+
+<p><code>git log</code> 常用选项</p>
+<table>
+<thead>
+<tr>
+<th align="right">选项</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">-p</td>
+<td align="left">按补丁格式显示每个更新之间的差异</td>
+</tr>
+<tr>
+<td align="right">–stat</td>
+<td align="left">显示每次更新的文件修改统计信息。</td>
+</tr>
+<tr>
+<td align="right">–shortstat</td>
+<td align="left">只显示 –stat 中最后的行数修改添加移除统计。</td>
+</tr>
+<tr>
+<td align="right">–name-only</td>
+<td align="left">仅在提交信息后显示已修改的文件清单。</td>
+</tr>
+<tr>
+<td align="right">–name-status</td>
+<td align="left">显示新增、修改、删除的文件清单。</td>
+</tr>
+<tr>
+<td align="right">–abbrev-commit</td>
+<td align="left">仅显示 SHA-1 的前几个字符，而非所有的 40 个字符。</td>
+</tr>
+<tr>
+<td align="right">–relative-date</td>
+<td align="left">使用较短的相对时间显示（比如，“2 weeks ago”）。</td>
+</tr>
+<tr>
+<td align="right">–graph</td>
+<td align="left">显示 ASCII 图形表示的分支合并历史。</td>
+</tr>
+<tr>
+<td align="right">–pretty</td>
+<td align="left">使用其他格式显示历史提交信息。可用的选项包括 oneline，short，full，fuller 和 format（后跟指定格式）。</td>
+</tr>
+</tbody></table>
+<p><code>git log --pretty=format</code> 常用的选项</p>
+<table>
+<thead>
+<tr>
+<th align="right">选项</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">%H</td>
+<td align="left">提交对象（commit）的完整哈希字串</td>
+</tr>
+<tr>
+<td align="right">%h</td>
+<td align="left">提交对象的简短哈希字串</td>
+</tr>
+<tr>
+<td align="right">%T</td>
+<td align="left">树对象（tree）的完整哈希字串</td>
+</tr>
+<tr>
+<td align="right">%t</td>
+<td align="left">树对象的简短哈希字串</td>
+</tr>
+<tr>
+<td align="right">%P</td>
+<td align="left">父对象（parent）的完整哈希字串</td>
+</tr>
+<tr>
+<td align="right">%p</td>
+<td align="left">父对象的简短哈希字串</td>
+</tr>
+<tr>
+<td align="right">%an</td>
+<td align="left">作者（author）的名字</td>
+</tr>
+<tr>
+<td align="right">%ae</td>
+<td align="left">作者的电子邮件地址</td>
+</tr>
+<tr>
+<td align="right">%ad</td>
+<td align="left">作者修订日期（可以用 –date= 选项定制格式）</td>
+</tr>
+<tr>
+<td align="right">%ar</td>
+<td align="left">作者修订日期，按多久以前的方式显示</td>
+</tr>
+<tr>
+<td align="right">%cn</td>
+<td align="left">提交者（committer）的名字</td>
+</tr>
+<tr>
+<td align="right">%ce</td>
+<td align="left">提交者的电子邮件地址</td>
+</tr>
+<tr>
+<td align="right">%cd</td>
+<td align="left">提交日期</td>
+</tr>
+<tr>
+<td align="right">%cr</td>
+<td align="left">提交日期，按多久以前的方式显示</td>
+</tr>
+<tr>
+<td align="right">%s</td>
+<td align="left">提交说明</td>
+</tr>
+</tbody></table>
+<h3 id="限制输出长度"><a href="#限制输出长度" class="headerlink" title="限制输出长度"></a>限制输出长度</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">log</span> --since=2.weeks</span><br></pre></td></tr></table></figure>
+
+<p>限制 <code>git log</code> 输出的选项</p>
+<table>
+<thead>
+<tr>
+<th align="right">选项</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">-(n)</td>
+<td align="left">仅显示最近的 n 条提交</td>
+</tr>
+<tr>
+<td align="right">–since, –after</td>
+<td align="left">仅显示指定时间之后的提交</td>
+</tr>
+<tr>
+<td align="right">–until, –before</td>
+<td align="left">仅显示指定时间之前的提交</td>
+</tr>
+<tr>
+<td align="right">–author</td>
+<td align="left">仅显示指定作者相关的提交</td>
+</tr>
+<tr>
+<td align="right">–committer</td>
+<td align="left">仅显示指定提交者相关的提交</td>
+</tr>
+<tr>
+<td align="right">–grep</td>
+<td align="left">仅显示含指定关键字的提交</td>
+</tr>
+<tr>
+<td align="right">-S</td>
+<td align="left">仅显示添加或移除了某个关键字的提交</td>
+</tr>
+</tbody></table>
+<h2 id="4-撤消操作"><a href="#4-撤消操作" class="headerlink" title="4. 撤消操作"></a>4. 撤消操作</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git commit --amend</span><br></pre></td></tr></table></figure>
+
+<h3 id="取消暂存的文件"><a href="#取消暂存的文件" class="headerlink" title="取消暂存的文件"></a>取消暂存的文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># git reset HEAD &lt;file&gt; ...</span></span><br><span class="line">git reset HEAD CONTRIBUTING.md</span><br></pre></td></tr></table></figure>
+
+<h3 id="撤消对文件的修改"><a href="#撤消对文件的修改" class="headerlink" title="撤消对文件的修改"></a>撤消对文件的修改</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># git checkout -- &lt;file&gt;</span></span><br><span class="line">git checkout -- CONTRIBUTING.md</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="5-远程仓库的使用"><a href="#5-远程仓库的使用" class="headerlink" title="5. 远程仓库的使用"></a>5. 远程仓库的使用</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/schacon/ticgit</span><br><span class="line">git remote</span><br><span class="line">git remote -v</span><br><span class="line">git remote add pb https://github.com/paulboone/ticgit</span><br><span class="line">git fetch pb</span><br></pre></td></tr></table></figure>
+
+<h3 id="从远程仓库中抓取与拉取"><a href="#从远程仓库中抓取与拉取" class="headerlink" title="从远程仓库中抓取与拉取"></a>从远程仓库中抓取与拉取</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git fetch [remote-name]</span><br></pre></td></tr></table></figure>
+
+<h3 id="推送到远程仓库"><a href="#推送到远程仓库" class="headerlink" title="推送到远程仓库"></a>推送到远程仓库</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push origin master</span><br></pre></td></tr></table></figure>
+
+<h3 id="查看远程仓库"><a href="#查看远程仓库" class="headerlink" title="查看远程仓库"></a>查看远程仓库</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># git remote show [remote-name]</span></span><br><span class="line">git remote show origin</span><br></pre></td></tr></table></figure>
+
+<h3 id="远程仓库的移除与重命名"><a href="#远程仓库的移除与重命名" class="headerlink" title="远程仓库的移除与重命名"></a>远程仓库的移除与重命名</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git remote rename pb paul</span><br><span class="line">git remote rm paul</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="6-打标签"><a href="#6-打标签" class="headerlink" title="6. 打标签"></a>6. 打标签</h2><h3 id="列出标签"><a href="#列出标签" class="headerlink" title="列出标签"></a>列出标签</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git tag</span><br><span class="line">git tag -l <span class="string">'v1.8.5*'</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="创建标签"><a href="#创建标签" class="headerlink" title="创建标签"></a>创建标签</h3><h3 id="附注标签"><a href="#附注标签" class="headerlink" title="附注标签"></a>附注标签</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git tag -a v1.4 -m <span class="string">'my version 1.4'</span></span><br><span class="line">git tag</span><br><span class="line">git show v1.4 <span class="comment"># 查看标签信息与对应的提交信息</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="轻量标签"><a href="#轻量标签" class="headerlink" title="轻量标签"></a>轻量标签</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git tag v1.4-lw</span><br><span class="line">git tag</span><br></pre></td></tr></table></figure>
+
+<h3 id="后期打标签"><a href="#后期打标签" class="headerlink" title="后期打标签"></a>后期打标签</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">log</span> --pretty=oneline</span><br><span class="line">git tag -a v1.2 &lt;部分校验和&gt; <span class="comment"># git tag -a v1.2 9fceb02</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="共享标签"><a href="#共享标签" class="headerlink" title="共享标签"></a>共享标签</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git push origin v1.5</span><br><span class="line">git push origin --tags <span class="comment"># 一次性推送全部标签</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="检出标签"><a href="#检出标签" class="headerlink" title="检出标签"></a>检出标签</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用 git checkout -b [branchname] [tagname] 在特定的标签上创建一个新分支</span></span><br><span class="line">git checkout -b version2 v2.0.0</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="7-Git-别名"><a href="#7-Git-别名" class="headerlink" title="7. Git 别名"></a>7. Git 别名</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">git config --global alias.co checkout</span><br><span class="line">git config --global alias.br branch</span><br><span class="line">git config --global alias.ci commit</span><br><span class="line">git config --global alias.st status</span><br><span class="line">git config --global alias.unstage <span class="string">'reset HEAD --'</span></span><br><span class="line">git config --global alias.last <span class="string">'log -1 HEAD'</span></span><br><span class="line"><span class="comment"># 执行外部命令，在命令前面加入 ! 符号</span></span><br><span class="line">git config --global alias.visual <span class="string">'!gitk'</span></span><br></pre></td></tr></table></figure>
+
+
+  	</div>
+	  
+	  <div class="article-tags tags">
+      
+        <a href="/tags/git/">git</a>
+      
+	  </div>
+    
+		
+	
+		<div class="art-item-footer">
+				
+					<span class="art-item-left"><i class="icon icon-chevron-thin-left"></i>prev：<a href="/2019/09/15/vagrant_k8s/" rel="prev"  title="使用 vagrant 搭建 kubernetes 基础环境">
+						使用 vagrant 搭建 kubernetes 基础环境 
+					</a></span>
+				
+				
+					<span class="art-item-right">next：<a href="/2019/02/27/promethues/" rel="next"  title="Prometheus + Grafana">
+						Prometheus + Grafana
+					</a><i class="icon icon-chevron-thin-right"></i></span>
+				
+		</div>
+	
+	</section>
+	
+</article>
+<script>
+	window.subData = {
+		title: 'Git 指南',
+		tools: true
+	}
+</script>
+
+      </div>
+      <aside class='l_side'>
+        
+  <section class='m_widget categories'>
+<div class='header'>类别</div>
+<div class='content'>
+    
+    <ul class="entry">
+    
+        <li><a class="flat-box" href="/categories/database/"><div class='name'>database</div><div class='badget'>7</div></a></li>
+    
+        <li><a class="flat-box" href="/categories/go/"><div class='name'>go</div><div class='badget'>5</div></a></li>
+    
+        <li><a class="flat-box" href="/categories/linux/"><div class='name'>linux</div><div class='badget'>30</div></a></li>
+    
+        <li><a class="flat-box" href="/categories/mac/"><div class='name'>mac</div><div class='badget'>1</div></a></li>
+    
+        <li><a class="flat-box" href="/categories/monitor/"><div class='name'>monitor</div><div class='badget'>4</div></a></li>
+    
+        <li><a class="flat-box" href="/categories/python/"><div class='name'>python</div><div class='badget'>1</div></a></li>
+    
+        <li><a class="flat-box" href="/categories/shell/"><div class='name'>shell</div><div class='badget'>1</div></a></li>
+    
+        <li><a class="flat-box" href="/categories/tools/"><div class='name'>tools</div><div class='badget'>13</div></a></li>
+    
+    </ul>
+    
+</div>
+</section>
+
+  
+<div class="m_widget tagcloud">
+    <div class="header">标签</div>
+    <div class='content'>
+        <a href="/tags/CI-CD/" style="font-size: 14px; color: #808080">CI/CD</a> <a href="/tags/Kubernetes/" style="font-size: 15.2px; color: #666">Kubernetes</a> <a href="/tags/ambari/" style="font-size: 14px; color: #808080">ambari</a> <a href="/tags/ansible/" style="font-size: 14px; color: #808080">ansible</a> <a href="/tags/archlinux/" style="font-size: 14px; color: #808080">archlinux</a> <a href="/tags/docker/" style="font-size: 18.8px; color: #1a1a1a">docker</a> <a href="/tags/ftp/" style="font-size: 14px; color: #808080">ftp</a> <a href="/tags/git/" style="font-size: 16.4px; color: #4d4d4d">git</a> <a href="/tags/gitlab/" style="font-size: 14px; color: #808080">gitlab</a> <a href="/tags/go/" style="font-size: 16.4px; color: #4d4d4d">go</a> <a href="/tags/golang/" style="font-size: 14px; color: #808080">golang</a> <a href="/tags/grafana/" style="font-size: 14px; color: #808080">grafana</a> <a href="/tags/hadoop/" style="font-size: 15.2px; color: #666">hadoop</a> <a href="/tags/hexo/" style="font-size: 14px; color: #808080">hexo</a> <a href="/tags/jekyll/" style="font-size: 14px; color: #808080">jekyll</a> <a href="/tags/jenkins/" style="font-size: 16.4px; color: #4d4d4d">jenkins</a> <a href="/tags/journald/" style="font-size: 14px; color: #808080">journald</a> <a href="/tags/keepalive/" style="font-size: 14px; color: #808080">keepalive</a> <a href="/tags/kubernetes/" style="font-size: 14px; color: #808080">kubernetes</a> <a href="/tags/ldap/" style="font-size: 14px; color: #808080">ldap</a> <a href="/tags/linux/" style="font-size: 20px; color: #000">linux</a> <a href="/tags/lvs/" style="font-size: 14px; color: #808080">lvs</a> <a href="/tags/mac/" style="font-size: 14px; color: #808080">mac</a> <a href="/tags/mgr/" style="font-size: 14px; color: #808080">mgr</a> <a href="/tags/mysql/" style="font-size: 18.8px; color: #1a1a1a">mysql</a> <a href="/tags/network/" style="font-size: 14px; color: #808080">network</a> <a href="/tags/nginx/" style="font-size: 14px; color: #808080">nginx</a> <a href="/tags/nmcli/" style="font-size: 15.2px; color: #666">nmcli</a> <a href="/tags/nodejs/" style="font-size: 15.2px; color: #666">nodejs</a> <a href="/tags/oracle/" style="font-size: 14px; color: #808080">oracle</a> <a href="/tags/pip/" style="font-size: 14px; color: #808080">pip</a> <a href="/tags/powerline/" style="font-size: 14px; color: #808080">powerline</a> <a href="/tags/powershell/" style="font-size: 14px; color: #808080">powershell</a> <a href="/tags/prometheus/" style="font-size: 14px; color: #808080">prometheus</a> <a href="/tags/python/" style="font-size: 17.6px; color: #333">python</a> <a href="/tags/raspberrypi/" style="font-size: 14px; color: #808080">raspberrypi</a> <a href="/tags/replication/" style="font-size: 14px; color: #808080">replication</a> <a href="/tags/ruby/" style="font-size: 14px; color: #808080">ruby</a> <a href="/tags/selinux/" style="font-size: 14px; color: #808080">selinux</a> <a href="/tags/shell/" style="font-size: 16.4px; color: #4d4d4d">shell</a> <a href="/tags/svn/" style="font-size: 14px; color: #808080">svn</a> <a href="/tags/systemd/" style="font-size: 14px; color: #808080">systemd</a> <a href="/tags/tomcat/" style="font-size: 15.2px; color: #666">tomcat</a> <a href="/tags/ubuntu/" style="font-size: 14px; color: #808080">ubuntu</a> <a href="/tags/vagrant/" style="font-size: 14px; color: #808080">vagrant</a> <a href="/tags/virtualbox/" style="font-size: 15.2px; color: #666">virtualbox</a> <a href="/tags/windows/" style="font-size: 15.2px; color: #666">windows</a> <a href="/tags/wsl/" style="font-size: 14px; color: #808080">wsl</a> <a href="/tags/zabbix/" style="font-size: 17.6px; color: #333">zabbix</a>
+    </div>
+</div>
+
+
+
+  <section class='m_widget links'>
+<div class='header'>链接</div>
+<div class='content'>
+    <ul class="entry">
+    
+        <li><a class="flat-box" target="_blank" href="https://github.com/todevops">
+            <div class='name'>ToDevOps</div>
+        </a></li>
+    
+    </ul>
+</div>
+</section>
+
+      </aside>
+      <script>setLoadingBarProgress(60);</script>
+    </div>
+  </div>
+  <footer id="footer" class="clearfix">
+
+	<div class="social-wrapper">
+  	
+      
+        <a href="https://github.com/todevops" class="social github"
+          target="_blank" rel="external">
+          <span class="icon icon-github"></span>
+        </a>
+      
+    
+  </div>
+  
+  <div><a href='https://todevops.github.io' target="_blank" rel="noopener" class="codename">todevops</a>&copy; by Jeremy</a>.</div>
+  
+</footer>
+
+
+  <script>setLoadingBarProgress(80);</script>
+  
+
+<script src="//apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src='//cdn.bootcss.com/node-waves/0.7.5/waves.min.js'></script>
+<script src="//cdn.bootcss.com/scrollReveal.js/3.3.2/scrollreveal.min.js"></script>
+
+<script src="/js/jquery.fitvids.js"></script>
+
+<script>
+	var GOOGLE_CUSTOM_SEARCH_API_KEY = "";
+	var GOOGLE_CUSTOM_SEARCH_ENGINE_ID = "";
+	var ALGOLIA_API_KEY = "";
+	var ALGOLIA_APP_ID = "";
+	var ALGOLIA_INDEX_NAME = "";
+  var AZURE_SERVICE_NAME = "";
+  var AZURE_INDEX_NAME = "";
+  var AZURE_QUERY_KEY = "";
+  var BAIDU_API_ID = "";
+  var SEARCH_SERVICE = "hexo";
+  var ROOT = "/"||"/";
+  if(!ROOT.endsWith('/'))ROOT += '/';
+</script>
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/app.js"></script>
+
+
+
+  <script>setLoadingBarProgress(100);</script>
+</body>
+</html>

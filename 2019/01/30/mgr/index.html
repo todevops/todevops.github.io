@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  
+  <title>MySQL 组复制 | Jeremy&#39;s Blog Site</title>
+  <meta name="description" content="" />
+  <meta name="keywords" content="" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="shortcut icon" href="/">
+  <link rel="alternate" href="/atom.xml" title="Jeremy's Blog Site">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="MySQL 组复制">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL 组复制">
+<meta property="og:url" content="http://yoursite.com/2019/01/30/mgr/index.html">
+<meta property="og:site_name" content="Jeremy&#39;s Blog Site">
+<meta property="og:description" content="MySQL 组复制">
+<meta property="og:locale" content="zh">
+<meta property="article:published_time" content="2019-01-30T04:24:39.000Z">
+<meta property="article:modified_time" content="2020-12-04T11:24:29.137Z">
+<meta property="article:author" content="JeremyTownes">
+<meta property="article:tag" content="mysql">
+<meta property="article:tag" content="mgr">
+<meta name="twitter:card" content="summary">
+    
+  <link href="https://fonts.googleapis.com/css?family=Inconsolata|Titillium+Web" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
+  <link href='//cdn.bootcss.com/node-waves/0.7.5/waves.min.css' rel='stylesheet'>
+  
+<link rel="stylesheet" href="/style.css">
+
+  <script>
+    function setLoadingBarProgress(num) {
+      document.getElementById('loading-bar').style.width=num+"%";
+    }
+  </script>
+<meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="Jeremy's Blog Site" type="application/atom+xml">
+</head>
+
+<body>
+  <div id="loading-bar-wrapper">
+  <div id="loading-bar"></div>
+</div>
+
+
+  <script>setLoadingBarProgress(20)</script> 
+  <header class="l_header">
+	<div class='wrapper'>
+		<div class="nav-main container container--flex">
+			<a class="logo flat-box" href='/' >
+				Jeremy's Blog Site
+			</a>
+			<div class='menu'>
+				<ul class='h-list'>
+					
+						<li>
+							<a class='flat-box nav-home' href='/'>
+								主页
+							</a>
+						</li>
+					
+						<li>
+							<a class='flat-box nav-archives' href='/archives'>
+								归档
+							</a>
+						</li>
+					
+						<li>
+							<a class='flat-box nav-about' href='/about'>
+								关于
+							</a>
+						</li>
+					
+				</ul>
+				<div class='underline'></div>
+			</div>
+			
+				<div class="m_search">
+					<form name="searchform" class="form u-search-form">
+						<input type="text" class="input u-search-input" placeholder="键入搜索" />
+						<span class="icon icon-search"></span>
+					</form>
+				</div>
+			
+			<ul class='switcher h-list'>
+				
+					<li class='s-search'><a href='javascript:void(0)'><span class="icon icon-search flat-box"></span></a></li>
+				
+				<li class='s-menu'><a href='javascript:void(0)'><span class="icon icon-menu flat-box"></span></a></li>
+			</ul>
+		</div>
+		
+		<div class='nav-sub container container--flex'>
+			<a class="logo" class="flat-box" href='javascript:void(0)'>
+				Word of Forks
+			</a>
+
+			<ul class='switcher h-list'>
+				<li class='s-comment'><a href='javascript:void(0)'><span class="icon icon-chat_bubble_outline flat-box"></span></a></li>
+				<li class='s-top'><a href='javascript:void(0)'><span class="icon icon-arrow_upward flat-box"></span></a></li>
+				<li class='s-toc'><a href='javascript:void(0)'><span class="icon icon-format_list_numbered flat-box"></span></a></li>
+			</ul>
+		</div>
+	</div>
+</header>
+<aside class="menu-phone">
+	<nav>
+		
+			<a href="/" class="nav-home nav">
+				主页
+			</a>
+		
+			<a href="/archives" class="nav-archives nav">
+				归档
+			</a>
+		
+			<a href="/about" class="nav-about nav">
+				关于
+			</a>
+		
+	</nav>
+</aside>
+
+    <script>setLoadingBarProgress(40);</script>
+  <div class="l_body">
+    <div class='container clearfix'>
+      <div class='l_main'>
+        <article id="post-mgr"
+  class="post white-box article-type-post"
+  itemscope itemprop="blogPost">
+	<section class='meta'>
+	<h2 class="title">
+  	<a href="/2019/01/30/mgr/">
+    	MySQL 组复制
+    </a>
+  </h2>
+	<time>
+	  Jan 30, 2019
+	</time>
+	
+    
+    <div class='cats'>
+        <a href="/categories/database/">database</a>
+    </div>
+
+	</section>
+	
+		<section class="toc-wrapper"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-部署组复制实例"><span class="toc-number">1.</span> <span class="toc-text">1. 部署组复制实例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-配置组复制实例"><span class="toc-number">2.</span> <span class="toc-text">2. 配置组复制实例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#组Replication-Server设置"><span class="toc-number">2.1.</span> <span class="toc-text">组Replication Server设置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#复制框架"><span class="toc-number">2.2.</span> <span class="toc-text">复制框架</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#组复制设置"><span class="toc-number">2.3.</span> <span class="toc-text">组复制设置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-用户凭证"><span class="toc-number">3.</span> <span class="toc-text">3. 用户凭证</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#使用组复制和缓存SHA-2用户凭据插件"><span class="toc-number">3.1.</span> <span class="toc-text">使用组复制和缓存SHA-2用户凭据插件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-启动组复制"><span class="toc-number">4.</span> <span class="toc-text">4. 启动组复制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-向组添加实例"><span class="toc-number">5.</span> <span class="toc-text">5. 向组添加实例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#添加第二个实例"><span class="toc-number">5.1.</span> <span class="toc-text">添加第二个实例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#添加其他实例"><span class="toc-number">5.2.</span> <span class="toc-text">添加其他实例</span></a></li></ol></li></ol></section>
+	
+	<section class="article typo">
+  	<div class="article-entry" itemprop="articleBody">
+    	<p>MySQL 组复制</p>
+<a id="more"></a>
+
+<h2 id="1-部署组复制实例"><a href="#1-部署组复制实例" class="headerlink" title="1. 部署组复制实例"></a>1. 部署组复制实例</h2><p>假定MySQL Server已下载并解压缩到名为的目录中mysql-8.0。以下过程使用一台物理计算机，因此每个MySQL服务器实例都需要该实例的特定数据目录。在名为的目录中创建数据目录data 并初始化每个目录。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mkdir data</span><br><span class="line">mysql-8.0&#x2F;bin&#x2F;mysqld --initialize-insecure --basedir&#x3D;$PWD&#x2F;mysql-8.0 --datadir&#x3D;$PWD&#x2F;data&#x2F;s1</span><br><span class="line">mysql-8.0&#x2F;bin&#x2F;mysqld --initialize-insecure --basedir&#x3D;$PWD&#x2F;mysql-8.0 --datadir&#x3D;$PWD&#x2F;data&#x2F;s2</span><br><span class="line">mysql-8.0&#x2F;bin&#x2F;mysqld --initialize-insecure --basedir&#x3D;$PWD&#x2F;mysql-8.0 --datadir&#x3D;$PWD&#x2F;data&#x2F;s3</span><br></pre></td></tr></table></figure>
+
+<p>里面data/s1，data/s2， data/s3是一个初始化的数据目录，包含了MySQL系统数据库和相关表等等</p>
+<blockquote>
+<p>–initialize-insecure在生产环境中使用，它仅用于简化教程。</p>
+</blockquote>
+<h2 id="2-配置组复制实例"><a href="#2-配置组复制实例" class="headerlink" title="2. 配置组复制实例"></a>2. 配置组复制实例</h2><h3 id="组Replication-Server设置"><a href="#组Replication-Server设置" class="headerlink" title="组Replication Server设置"></a>组Replication Server设置</h3><p>要安装和使用组复制插件，必须正确配置MySQL Server实例。建议将配置存储在实例的配置文件中。以下是组中第一个实例的配置，在此过程中称为s1。以下部分显示了示例服务器配置。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[mysqld]</span><br><span class="line"></span><br><span class="line"># server configuration</span><br><span class="line">datadir&#x3D;&lt;full_path_to_data&gt;&#x2F;data&#x2F;s1</span><br><span class="line">basedir&#x3D;&lt;full_path_to_bin&gt;&#x2F;mysql-8.0&#x2F;</span><br><span class="line"></span><br><span class="line">port&#x3D;24801</span><br><span class="line">socket&#x3D;&lt;full_path_to_sock_dir&gt;&#x2F;s1.sock</span><br></pre></td></tr></table></figure>
+
+<p>这些设置将MySQL服务器配置为使用先前创建的数据目录以及服务器应打开的端口并开始侦听传入连接。</p>
+<blockquote>
+<p>使用非默认端口24801是因为在本教程中，三个服务器实例使用相同的主机名。在具有三台不同机器的设置中，这不是必需的。</p>
+</blockquote>
+<p>组复制需要成员之间的网络连接，这意味着每个成员必须能够解析所有其他成员的网络地址。例如，在本教程中，所有三个实例都在一台机器上运行，因此为了确保成员可以相互联系，您可以在选项文件中添加一行，例如 report_host=127.0.0.1。</p>
+<h3 id="复制框架"><a href="#复制框架" class="headerlink" title="复制框架"></a>复制框架</h3><p>以下设置根据MySQL组复制要求配置复制。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">server_id&#x3D;1</span><br><span class="line">gtid_mode&#x3D;ON</span><br><span class="line">enforce_gtid_consistency&#x3D;ON</span><br><span class="line">binlog_checksum&#x3D;NONE</span><br></pre></td></tr></table></figure>
+
+<p>这些设置将服务器配置为使用唯一标识符编号1，以启用全局事务标识符，以允许仅执行可使用GTID安全记录的语句，以及禁用写入写入二进制日志的事件的校验和。</p>
+<blockquote>
+<p>如果您使用的是早于8.0.3的MySQL版本，其中默认值已针对复制进行了改进，则需要将这些行添加到成员的选项文件中。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">log_bin&#x3D;binlog</span><br><span class="line">log_slave_updates&#x3D;ON</span><br><span class="line">binlog_format&#x3D;ROW</span><br><span class="line">master_info_repository&#x3D;TABLE</span><br><span class="line">relay_log_info_repository&#x3D;TABLE</span><br></pre></td></tr></table></figure>
+
+<p>这些设置指示服务器打开二进制日志记录，使用基于行的格式，将复制元数据存储在系统表而不是文件中，并禁用二进制日志事件校验和。有关更多详细信息，请参见 第18.8.1节“组复制要求”。</p>
+<h3 id="组复制设置"><a href="#组复制设置" class="headerlink" title="组复制设置"></a>组复制设置</h3><p>此时，该my.cnf文件确保配置服务器并指示在给定配置下实例化复制基础结构。以下部分配置服务器的“组复制”设置。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">transaction_write_set_extraction&#x3D;XXHASH64</span><br><span class="line">group_replication_group_name&#x3D;&quot;aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa&quot;</span><br><span class="line">group_replication_start_on_boot&#x3D;off</span><br><span class="line">group_replication_local_address&#x3D; &quot;127.0.0.1:24901&quot;</span><br><span class="line">group_replication_group_seeds&#x3D; &quot;127.0.0.1:24901,127.0.0.1:24902,127.0.0.1:24903&quot;</span><br><span class="line">group_replication_bootstrap_group&#x3D;off</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>配置 transaction_write_set_extraction 指示服务器对于每个事务，它必须收集写集并使用XXHASH64散列算法将其编码为散列。从MySQL 8.0.2开始，此设置是默认设置，因此可以省略此行。</li>
+<li>配置 group_replication_group_name 告诉插件它正在加入或创建的组被命名为”aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa”，group_replication_group_name的值 必须是有效的UUID。在二进制日志中为组复制事件设置GTID时，将在内部使用此UUID。使用SELECT UUID()生成一个UUID。</li>
+<li>配置 group_replication_start_on_boot 指示插件在服务器启动时不自动启动操作。这在设置组复制时很重要，因为它确保您可以在手动启动插件之前配置服务器。配置成员后，您可以设置 group_replication_start_on_boot 为on，以便在服务器引导时自动启动Group Replication。</li>
+<li>配置 group_replication_local_address 告诉插件使用网络地址127.0.0.1和端口24901与组中的其他成员进行内部通信。</li>
+</ul>
+<blockquote>
+<p>组复制将此地址用于涉及组通信引擎（XCom，Paxos变体）的远程实例的内部成员到成员连接。此地址必须与用于SQL的主机名和端口不同，并且不得用于客户端应用程序。在运行组复制时，必须为组成员之间的内部通信保留它。</p>
+</blockquote>
+<p>配置的网络地址 group_replication_local_address 必须可由所有组成员解析。例如，如果每个服务器实例位于具有固定网络地址的其他计算机上，则可以使用计算机的IP地址，例如10.0.0.1。如果使用主机名，则必须使用完全限定名称，并确保它可以通过DNS解析，并且配置正确 /etc/hosts文件或其他名称解析过程。从MySQL 8.0.14开始，可以使用IPv6地址（或解析它们的主机名）以及IPv4地址。组可以包含使用IPv6的成员和使用IPv4的成员的混合。</p>
+<p>建议的端口 group_replication_local_address 是33061。在本教程中，我们使用在一台计算机上运行的三个服务器实例，因此端口24901到24903用于内部通信网络地址。 group_replication_local_address Group Replication使用它作为复制组中组成员的唯一标识符。只要主机名或IP地址都不同，您就可以为复制组的所有成员使用相同的端口，并且如本教程所示，只要具有相同的主机名或IP地址，就可以使用相同的主机名或IP地址。港口都不一样。</p>
+<ul>
+<li>配置 group_replication_group_seeds 设置组成员的主机名和端口，新成员使用它们建立与组的连接。这些成员称为种子成员。建立连接后，将列出组成员身份信息 performance_schema.replication_group_members。通常， group_replication_group_seeds 列表包含hostname:port每个组成员的列表 group_replication_local_address，但这不是强制性的，可以选择组成员的子集作为种子。</li>
+</ul>
+<blockquote>
+<p>该hostname:port列在 group_replication_group_seeds 是种子构件的内部网络地址，由被配置 group_replication_local_address ，而不是SQL hostname:port用于客户端连接，并且例如在显示 performance_schema.replication_group_members 表中。</p>
+</blockquote>
+<p>启动该组的服务器不使用此选项，因为它是初始服务器，因此，它负责引导组。换句话说，引导该组的服务器上的任何现有数据都是用作下一个加入成员的数据。第二个服务器连接要求组中唯一的成员加入，第二个服务器上的任何缺失数据都从引导成员上的施主数据中复制，然后组扩展。加入的第三个服务器可以要求这两个服务器中的任何一个加入，数据被同步到新成员，然后该组再次扩展。</p>
+<blockquote>
+<p>在同时加入多个服务器时，请确保它们指向已在该组中的种子成员。不要使用也加入该组的成员作为种子，因为他们在联系时可能尚未加入该组。</p>
+</blockquote>
+<p>最好首先启动引导程序成员，然后让它创建组。然后使其成为正在加入的其余成员的种子成员。这确保了在连接其余成员时形成的组。</p>
+<p>不支持创建组并同时加入多个成员。它可能有效，但可能是操作竞争，然后加入该组的行为最终会出错或超时。</p>
+<p>加入成员必须使用种子成员在group_replication_group_seeds 选项中通告的相同协议（IPv4或IPv6）与种子成员通信 。出于组复制的IP地址白名单的目的，种子成员上的白名单必须包含种子成员提供的协议的加入成员的IP地址，或者解析为该协议的地址的主机名。除了加入成员之外，还必须设置此地址或主机名并列入白名单 group_replication_local_address 如果该地址的协议与种子成员的通告协议不匹配。如果加入成员没有适当协议的白名单地址，则拒绝其连接尝试。有关更多信息，请参见 第18.5.1节“IP地址白名单”。</p>
+<ul>
+<li>配置 group_replication_bootstrap_group 指示插件是否引导组。</li>
+</ul>
+<blockquote>
+<p>此选项只能在任何时候在一个服务器实例上使用，通常是第一次引导组时（或者在整个组关闭并重新备份的情况下）。如果多次引导组，例如当多个服务器实例设置了此选项时，则可以创建一个人工分裂脑情景，其中存在两个具有相同名称的不同组。在第一个服务器实例联机后禁用此选项。组中所有服务器的配置非常相似。您需要更改有关每个服务器的细节（例如server_id， datadir， group_replication_local_address）。本教程稍后将对此进行说明。</p>
+</blockquote>
+<h2 id="3-用户凭证"><a href="#3-用户凭证" class="headerlink" title="3. 用户凭证"></a>3. 用户凭证</h2><p>组复制使用异步复制协议来实现 分布式恢复过程依赖于名为的复制通道group_replication_recovery，该通道用于将来自供体成员的事务转移到加入该组的成员。因此，您需要设置具有正确权限的复制用户，以便组复制可以建立直接的成员到成员恢复复制通道。</p>
+<p>使用选项文件启动服务器：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql-8.0&#x2F;bin&#x2F;mysqld --defaults-file&#x3D;data&#x2F;s1&#x2F;s1.cnf</span><br></pre></td></tr></table></figure>
+
+<p>使用该REPLICATION-SLAVE权限创建MySQL用户 。可以在二进制日志中捕获此过程，然后您可以依靠分布式恢复来复制用于创建用户的语句。或者，您可以禁用二进制日志记录，然后在每个成员上手动创建用户，例如，如果要避免将更改传播到其他服务器实例。要禁用二进制日志记录，请连接到服务器s1并发出以下语句：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; SET SQL_LOG_BIN&#x3D;0;</span><br></pre></td></tr></table></figure>
+
+<p>在以下示例中rpl_user，将password显示具有密码 的用户 。配置服务器时，请使用合适的用户名和密码。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; CREATE USER rpl_user@&#39;%&#39; IDENTIFIED BY &#39;password&#39;;</span><br><span class="line">mysql&gt; GRANT REPLICATION SLAVE ON *.* TO rpl_user@&#39;%&#39;;</span><br><span class="line">mysql&gt; FLUSH PRIVILEGES;</span><br></pre></td></tr></table></figure>
+
+<p>如果禁用了二进制日志记录，则在创建用户后再次启用它。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; SET SQL_LOG_BIN&#x3D;1;</span><br></pre></td></tr></table></figure>
+
+<p>配置用户后，使用该 CHANGE MASTER TO语句将服务器配置为group_replication_recovery在下次需要从另一个成员恢复其状态时使用复制通道的给定凭据 。发出以下，替换 rpl_user和 password与创建用户时使用的值。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; CHANGE MASTER TO MASTER_USER&#x3D;&#39;rpl_user&#39;, MASTER_PASSWORD&#x3D;&#39;password&#39; \\</span><br><span class="line">		      FOR CHANNEL &#39;group_replication_recovery&#39;;</span><br></pre></td></tr></table></figure>
+
+<p>分布式恢复是加入组的服务器采取的第一步，并且没有与组成员相同的事务集。如果没有为group_replication_recovery 复制通道正确设置这些凭据，并且rpl_user如图所示，则服务器无法连接到供体成员并运行分布式恢复过程以与其他组成员同步，因此最终无法加入该组。</p>
+<p>同样，如果服务器无法通过服务器正确识别其他成员，hostname则恢复过程可能会失败。建议运行MySQL的操作系统具有正确配置的唯一 hostname，使用DNS或本地设置。这hostname可以Member_host在performance_schema.replication_group_members 表格的列中 进行验证 。如果多个组成员外部化hostname操作系统的默认 设置，则成员可能无法解析为正确的成员地址而无法加入该组。在这种情况下，使用report_host配置hostname由每个服务器外部化的唯一。</p>
+<h3 id="使用组复制和缓存SHA-2用户凭据插件"><a href="#使用组复制和缓存SHA-2用户凭据插件" class="headerlink" title="使用组复制和缓存SHA-2用户凭据插件"></a>使用组复制和缓存SHA-2用户凭据插件</h3><p>默认情况下，在MySQL 8中创建的用户使用 缓存SHA-2可插入身份验证。如果rpl_user您配置分布式恢复使用缓存SHA-2认证插件并没有使用安全套接字层支持（SSL） 的group_replication_recovery 复制通道，RSA密钥用于密码交换，创建SSL和RSA证书和密钥，您可以将rpl_user应该从组中恢复其状态的成员的公钥复制 到该组，也可以将捐赠者配置为在请求时提供公钥。</p>
+<p>更安全的方法是将公钥复制 rpl_user到应该从捐赠者恢复组状态的成员。然后，您需要group_replication_recovery_public_key_path 在加入组的成员上配置 系统变量，并为其提供公钥的路径rpl_user。</p>
+<p>可选地，不太安全的方法是设置 group_replication_recovery_get_public_key=ON 捐赠者，以便他们rpl_user在加入组时提供成员的公钥 。无法验证服务器的身份，因此只有group_replication_recovery_get_public_key=ON 在您确定没有服务器身份被泄露的风险时才会设置 ，例如通过中间人攻击。</p>
+<h2 id="4-启动组复制"><a href="#4-启动组复制" class="headerlink" title="4. 启动组复制"></a>4. 启动组复制</h2><p>配置并启动服务器s1后，安装组复制插件。连接到服务器并发出以下命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">INSTALL PLUGIN group_replication SONAME &#39;group_replication.so&#39;;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>mysql.session在加载组复制之前，用户必须存在。 MySQL 8.0.2版中添加了mysql.session。如果使用早期版本初始化数据字典，则必须运行 mysql_upgrade过程。如果未运行升级，则组复制无法以错误消息启动尝试使用用户访问服务器时出现错误：mysql.session@localhost。确保用户在服务器中，并且在服务器更新后运行了mysql_upgrade。</p>
+</blockquote>
+<p>要检查插件是否已成功安装，请发出 SHOW PLUGINS;并检查输出。它应该显示如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; SHOW PLUGINS;</span><br><span class="line">+----------------------------+----------+--------------------+----------------------+-------------+</span><br><span class="line">| Name                       | Status   | Type               | Library              | License     |</span><br><span class="line">+----------------------------+----------+--------------------+----------------------+-------------+</span><br><span class="line">| binlog                     | ACTIVE   | STORAGE ENGINE     | NULL                 | PROPRIETARY |</span><br><span class="line"></span><br><span class="line">(...)</span><br><span class="line"></span><br><span class="line">| group_replication          | ACTIVE   | GROUP REPLICATION  | group_replication.so | PROPRIETARY |</span><br><span class="line">+----------------------------+----------+--------------------+----------------------+-------------+</span><br></pre></td></tr></table></figure>
+
+<p>要启动该组，请指示服务器s1引导该组，然后启动组复制。此引导程序应仅由单个服务器完成，该服务器启动组并且只执行一次。这就是为什么bootstrap配置选项的值未保存在配置文件中的原因。如果它保存在配置文件中，则在重新启动时，服务器会自动引导具有相同名称的第二个组。这将导致两个具有相同名称的不同组。同样的推理适用于在此选项设置为的情况下停止并重新启动插件ON。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SET GLOBAL group_replication_bootstrap_group&#x3D;ON;</span><br><span class="line">START GROUP_REPLICATION;</span><br><span class="line">SET GLOBAL group_replication_bootstrap_group&#x3D;OFF;</span><br></pre></td></tr></table></figure>
+
+<p>一旦START GROUP_REPLICATION 语句返回，该集团已启动。您可以检查该组现在是否已创建，并且其中包含一个成员：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; SELECT * FROM performance_schema.replication_group_members;</span><br><span class="line">+---------------------------+--------------------------------------+-------------+-------------+---------------+</span><br><span class="line">| CHANNEL_NAME              | MEMBER_ID                            | MEMBER_HOST | MEMBER_PORT | MEMBER_STATE  |</span><br><span class="line">+---------------------------+--------------------------------------+-------------+-------------+---------------+</span><br><span class="line">| group_replication_applier | ce9be252-2b71-11e6-b8f4-00212844f856 | myhost      |       24801 | ONLINE        |</span><br><span class="line">+---------------------------+--------------------------------------+-------------+-------------+---------------+</span><br></pre></td></tr></table></figure>
+
+<p>此表中的信息确认组中有成员具有唯一标识符 ce9be252-2b71-11e6-b8f4-00212844f856，它正在ONLINE并且正在myhost 侦听端口上的客户端连接 24801。</p>
+<p>为了证明服务器确实在一个组中并且它能够处理负载，创建一个表并向其添加一些内容。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; CREATE DATABASE test;</span><br><span class="line">mysql&gt; USE test;</span><br><span class="line">mysql&gt; CREATE TABLE t1 (c1 INT PRIMARY KEY, c2 TEXT NOT NULL);</span><br><span class="line">mysql&gt; INSERT INTO t1 VALUES (1, &#39;Luis&#39;);</span><br></pre></td></tr></table></figure>
+
+<p>检查表的内容t1和二进制日志。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; SELECT * FROM t1;</span><br><span class="line">+----+------+</span><br><span class="line">| c1 | c2   |</span><br><span class="line">+----+------+</span><br><span class="line">|  1 | Luis |</span><br><span class="line">+----+------+</span><br><span class="line"></span><br><span class="line">mysql&gt; SHOW BINLOG EVENTS;</span><br><span class="line">+---------------+-----+----------------+-----------+-------------+--------------------------------------------------------------------+</span><br><span class="line">| Log_name      | Pos | Event_type     | Server_id | End_log_pos | Info                                                               |</span><br><span class="line">+---------------+-----+----------------+-----------+-------------+--------------------------------------------------------------------+</span><br><span class="line">| binlog.000001 |   4 | Format_desc    |         1 |         123 | Server ver: 8.0.2-gr080-log, Binlog ver: 4                        |</span><br><span class="line">| binlog.000001 | 123 | Previous_gtids |         1 |         150 |                                                                    |</span><br><span class="line">| binlog.000001 | 150 | Gtid           |         1 |         211 | SET @@SESSION.GTID_NEXT&#x3D; &#39;aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa:1&#39;  |</span><br><span class="line">| binlog.000001 | 211 | Query          |         1 |         270 | BEGIN                                                              |</span><br><span class="line">| binlog.000001 | 270 | View_change    |         1 |         369 | view_id&#x3D;14724817264259180:1                                        |</span><br><span class="line">| binlog.000001 | 369 | Query          |         1 |         434 | COMMIT                                                             |</span><br><span class="line">| binlog.000001 | 434 | Gtid           |         1 |         495 | SET @@SESSION.GTID_NEXT&#x3D; &#39;aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa:2&#39;  |</span><br><span class="line">| binlog.000001 | 495 | Query          |         1 |         585 | CREATE DATABASE test                                               |</span><br><span class="line">| binlog.000001 | 585 | Gtid           |         1 |         646 | SET @@SESSION.GTID_NEXT&#x3D; &#39;aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa:3&#39;  |</span><br><span class="line">| binlog.000001 | 646 | Query          |         1 |         770 | use &#96;test&#96;; CREATE TABLE t1 (c1 INT PRIMARY KEY, c2 TEXT NOT NULL) |</span><br><span class="line">| binlog.000001 | 770 | Gtid           |         1 |         831 | SET @@SESSION.GTID_NEXT&#x3D; &#39;aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa:4&#39;  |</span><br><span class="line">| binlog.000001 | 831 | Query          |         1 |         899 | BEGIN                                                              |</span><br><span class="line">| binlog.000001 | 899 | Table_map      |         1 |         942 | table_id: 108 (test.t1)                                            |</span><br><span class="line">| binlog.000001 | 942 | Write_rows     |         1 |         984 | table_id: 108 flags: STMT_END_F                                    |</span><br><span class="line">| binlog.000001 | 984 | Xid            |         1 |        1011 | COMMIT &#x2F;* xid&#x3D;38 *&#x2F;                                                |</span><br><span class="line">+---------------+-----+----------------+-----------+-------------+--------------------------------------------------------------------+</span><br></pre></td></tr></table></figure>
+
+<p>如上所示，创建了数据库和表对象，并将相应的DDL语句写入二进制日志。此外，数据已插入表中并写入二进制日志。当组成长并且新成员尝试赶上并联机时执行分布式恢复时，下一节将说明二进制日志条目的重要性。</p>
+<h2 id="5-向组添加实例"><a href="#5-向组添加实例" class="headerlink" title="5. 向组添加实例"></a>5. 向组添加实例</h2><p>此时，该组中有一个成员服务器s1，其中包含一些数据。现在是时候通过添加先前配置的其他两个服务器来扩展组。</p>
+<h3 id="添加第二个实例"><a href="#添加第二个实例" class="headerlink" title="添加第二个实例"></a>添加第二个实例</h3><p>为了添加第二个实例，服务器s2，首先为它创建配置文件。配置类似于用于服务器s1的配置，除了诸如数据目录的位置，s2将要监听的端口或其之外的配置 server_id。这些不同的行在下面的列表中突出显示。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">[mysqld]</span><br><span class="line"></span><br><span class="line"># server configuration</span><br><span class="line">datadir&#x3D;&lt;full_path_to_data&gt;&#x2F;data&#x2F;s2</span><br><span class="line">basedir&#x3D;&lt;full_path_to_bin&gt;&#x2F;mysql-8.0&#x2F;</span><br><span class="line"></span><br><span class="line">port&#x3D;24802</span><br><span class="line">socket&#x3D;&lt;full_path_to_sock_dir&gt;&#x2F;s2.sock</span><br><span class="line"></span><br><span class="line">#</span><br><span class="line"># Replication configuration parameters</span><br><span class="line">#</span><br><span class="line">server_id&#x3D;2</span><br><span class="line">gtid_mode&#x3D;ON</span><br><span class="line">enforce_gtid_consistency&#x3D;ON</span><br><span class="line">binlog_checksum&#x3D;NONE</span><br><span class="line"></span><br><span class="line">#</span><br><span class="line"># Group Replication configuration</span><br><span class="line">#</span><br><span class="line">transaction_write_set_extraction&#x3D;XXHASH64</span><br><span class="line">group_replication_group_name&#x3D;&quot;aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa&quot;</span><br><span class="line">group_replication_start_on_boot&#x3D;off</span><br><span class="line">group_replication_local_address&#x3D; &quot;127.0.0.1:24902&quot;</span><br><span class="line">group_replication_group_seeds&#x3D; &quot;127.0.0.1:24901,127.0.0.1:24902,127.0.0.1:24903&quot;</span><br><span class="line">group_replication_bootstrap_group&#x3D; off</span><br></pre></td></tr></table></figure>
+
+<p>与服务器s1的过程类似，使用选项文件启动服务器。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql-8.0&#x2F;bin&#x2F;mysqld --defaults-file&#x3D;data&#x2F;s2&#x2F;s2.cnf</span><br></pre></td></tr></table></figure>
+
+<p>然后按如下方式配置恢复凭据。这些命令与设置服务器s1时使用的命令相同，因为用户在组内共享。在s2上发布以下语句。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">SET SQL_LOG_BIN&#x3D;0;</span><br><span class="line">CREATE USER rpl_user@&#39;%&#39; IDENTIFIED BY &#39;password&#39;;</span><br><span class="line">GRANT REPLICATION SLAVE ON *.* TO rpl_user@&#39;%&#39;;</span><br><span class="line">SET SQL_LOG_BIN&#x3D;1;</span><br><span class="line">CHANGE MASTER TO MASTER_USER&#x3D;&#39;rpl_user&#39;, MASTER_PASSWORD&#x3D;&#39;password&#39; \\</span><br><span class="line">	FOR CHANNEL &#39;group_replication_recovery&#39;;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>如果您使用的是缓存SHA-2身份验证插件（MySQL 8中的默认设置），请参阅 使用组复制和缓存SHA-2用户凭据插件。</p>
+</blockquote>
+<p>安装组复制插件并开始将服务器加入组的过程。以下示例以与部署服务器s1时相同的方式安装插件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; INSTALL PLUGIN group_replication SONAME &#39;group_replication.so&#39;;</span><br></pre></td></tr></table></figure>
+
+<p>将服务器s2添加到组中。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; START GROUP_REPLICATION;</span><br></pre></td></tr></table></figure>
+
+<p>与之前的步骤（与s1上执行的步骤相同）不同，此处的区别在于， 在启动组复制之前不会发出SET GLOBAL group_replication_bootstrap_group=ON;，因为该组已由服务器s1创建并引导。此时，只需将服务器s2添加到现有组中。</p>
+<blockquote>
+<p>当组复制成功启动并且服务器加入组时，它会检查 super_read_only变量。通过super_read_only 在成员的配置文件中设置为ON，可以确保因任何原因启动组复制时出现故障的服务器不接受事务。如果服务器应将该组作为读写实例加入，例如作为单主组中的主要组或多主组的成员，则当该 super_read_only变量设置为ON时，则在加入时将其设置为OFF群组。</p>
+</blockquote>
+<p>performance_schema.replication_group_members 再次 检查 表显示该组中现在有两个 ONLINE服务器。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; SELECT * FROM performance_schema.replication_group_members;</span><br><span class="line">+---------------------------+--------------------------------------+-------------+-------------+---------------+</span><br><span class="line">| CHANNEL_NAME              | MEMBER_ID                            | MEMBER_HOST | MEMBER_PORT | MEMBER_STATE  |</span><br><span class="line">+---------------------------+--------------------------------------+-------------+-------------+---------------+</span><br><span class="line">| group_replication_applier | 395409e1-6dfa-11e6-970b-00212844f856 | myhost      |       24801 | ONLINE        |</span><br><span class="line">| group_replication_applier | ac39f1e6-6dfa-11e6-a69d-00212844f856 | myhost      |       24802 | ONLINE        |</span><br><span class="line">+---------------------------+--------------------------------------+-------------+-------------+---------------+</span><br></pre></td></tr></table></figure>
+
+<p>由于服务器s2也标记为ONLINE，它必须已经自动赶上服务器s1。验证它确实已与服务器s1同步，如下所示。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; SHOW DATABASES LIKE &#39;test&#39;;</span><br><span class="line">+-----------------+</span><br><span class="line">| Database (test) |</span><br><span class="line">+-----------------+</span><br><span class="line">| test            |</span><br><span class="line">+-----------------+</span><br><span class="line"></span><br><span class="line">mysql&gt; SELECT * FROM test.t1;</span><br><span class="line">+----+------+</span><br><span class="line">| c1 | c2   |</span><br><span class="line">+----+------+</span><br><span class="line">|  1 | Luis |</span><br><span class="line">+----+------+</span><br><span class="line"></span><br><span class="line">mysql&gt; SHOW BINLOG EVENTS;</span><br><span class="line">+---------------+------+----------------+-----------+-------------+--------------------------------------------------------------------+</span><br><span class="line">| Log_name      | Pos  | Event_type     | Server_id | End_log_pos | Info                                                               |</span><br><span class="line">+---------------+------+----------------+-----------+-------------+--------------------------------------------------------------------+</span><br><span class="line">| binlog.000001 |    4 | Format_desc    |         2 |         123 | Server ver: 8.0.3-log, Binlog ver: 4                              |</span><br><span class="line">| binlog.000001 |  123 | Previous_gtids |         2 |         150 |                                                                    |</span><br><span class="line">| binlog.000001 |  150 | Gtid           |         1 |         211 | SET @@SESSION.GTID_NEXT&#x3D; &#39;aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa:1&#39;  |</span><br><span class="line">| binlog.000001 |  211 | Query          |         1 |         270 | BEGIN                                                              |</span><br><span class="line">| binlog.000001 |  270 | View_change    |         1 |         369 | view_id&#x3D;14724832985483517:1                                        |</span><br><span class="line">| binlog.000001 |  369 | Query          |         1 |         434 | COMMIT                                                             |</span><br><span class="line">| binlog.000001 |  434 | Gtid           |         1 |         495 | SET @@SESSION.GTID_NEXT&#x3D; &#39;aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa:2&#39;  |</span><br><span class="line">| binlog.000001 |  495 | Query          |         1 |         585 | CREATE DATABASE test                                               |</span><br><span class="line">| binlog.000001 |  585 | Gtid           |         1 |         646 | SET @@SESSION.GTID_NEXT&#x3D; &#39;aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa:3&#39;  |</span><br><span class="line">| binlog.000001 |  646 | Query          |         1 |         770 | use &#96;test&#96;; CREATE TABLE t1 (c1 INT PRIMARY KEY, c2 TEXT NOT NULL) |</span><br><span class="line">| binlog.000001 |  770 | Gtid           |         1 |         831 | SET @@SESSION.GTID_NEXT&#x3D; &#39;aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa:4&#39;  |</span><br><span class="line">| binlog.000001 |  831 | Query          |         1 |         890 | BEGIN                                                              |</span><br><span class="line">| binlog.000001 |  890 | Table_map      |         1 |         933 | table_id: 108 (test.t1)                                            |</span><br><span class="line">| binlog.000001 |  933 | Write_rows     |         1 |         975 | table_id: 108 flags: STMT_END_F                                    |</span><br><span class="line">| binlog.000001 |  975 | Xid            |         1 |        1002 | COMMIT &#x2F;* xid&#x3D;30 *&#x2F;                                                |</span><br><span class="line">| binlog.000001 | 1002 | Gtid           |         1 |        1063 | SET @@SESSION.GTID_NEXT&#x3D; &#39;aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa:5&#39;  |</span><br><span class="line">| binlog.000001 | 1063 | Query          |         1 |        1122 | BEGIN                                                              |</span><br><span class="line">| binlog.000001 | 1122 | View_change    |         1 |        1261 | view_id&#x3D;14724832985483517:2                                        |</span><br><span class="line">| binlog.000001 | 1261 | Query          |         1 |        1326 | COMMIT                                                             |</span><br><span class="line">+---------------+------+----------------+-----------+-------------+--------------------------------------------------------------------+</span><br></pre></td></tr></table></figure>
+
+<p>如上所示，第二台服务器已添加到组中，并自动从服务器s1复制了更改。根据分布式恢复过程，这意味着在加入组之后并且在被声明在线之前，服务器s2已经自动连接到服务器s1并从中获取丢失的数据。换句话说，它将事务从缺少的s1的二进制日志复制到它加入组的时间点。</p>
+<h3 id="添加其他实例"><a href="#添加其他实例" class="headerlink" title="添加其他实例"></a>添加其他实例</h3><p>向组添加其他实例与添加第二个服务器的步骤顺序基本相同，只是必须更改配置，因为必须更改服务器s2。总结所需的命令：</p>
+<ol>
+<li>创建配置文件</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">[mysqld]</span><br><span class="line"></span><br><span class="line"># server configuration</span><br><span class="line">datadir&#x3D;&lt;full_path_to_data&gt;&#x2F;data&#x2F;s3</span><br><span class="line">basedir&#x3D;&lt;full_path_to_bin&gt;&#x2F;mysql-8.0&#x2F;</span><br><span class="line"></span><br><span class="line">port&#x3D;24803</span><br><span class="line">socket&#x3D;&lt;full_path_to_sock_dir&gt;&#x2F;s3.sock</span><br><span class="line"></span><br><span class="line">#</span><br><span class="line"># Replication configuration parameters</span><br><span class="line">#</span><br><span class="line">server_id&#x3D;3</span><br><span class="line">gtid_mode&#x3D;ON</span><br><span class="line">enforce_gtid_consistency&#x3D;ON</span><br><span class="line">binlog_checksum&#x3D;NONE</span><br><span class="line"></span><br><span class="line">#</span><br><span class="line"># Group Replication configuration</span><br><span class="line">#</span><br><span class="line">group_replication_group_name&#x3D;&quot;aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa&quot;</span><br><span class="line">group_replication_start_on_boot&#x3D;off</span><br><span class="line">group_replication_local_address&#x3D; &quot;127.0.0.1:24903&quot;</span><br><span class="line">group_replication_group_seeds&#x3D; &quot;127.0.0.1:24901,127.0.0.1:24902,127.0.0.1:24903&quot;</span><br><span class="line">group_replication_bootstrap_group&#x3D; off</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>启动服务器</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql-8.0&#x2F;bin&#x2F;mysqld --defaults-file&#x3D;data&#x2F;s3&#x2F;s3.cnf</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>配置group_replication_recovery通道的恢复凭据。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">SET SQL_LOG_BIN&#x3D;0;</span><br><span class="line">CREATE USER rpl_user@&#39;%&#39; IDENTIFIED BY &#39;password&#39;;</span><br><span class="line">GRANT REPLICATION SLAVE ON *.* TO rpl_user@&#39;%&#39;;</span><br><span class="line">FLUSH PRIVILEGES;</span><br><span class="line">SET SQL_LOG_BIN&#x3D;1;</span><br><span class="line">CHANGE MASTER TO MASTER_USER&#x3D;&#39;rpl_user&#39;, MASTER_PASSWORD&#x3D;&#39;password&#39;  \\</span><br><span class="line">FOR CHANNEL &#39;group_replication_recovery&#39;;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>安装Group Replication插件并启动它。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">INSTALL PLUGIN group_replication SONAME &#39;group_replication.so&#39;;</span><br><span class="line">START GROUP_REPLICATION;</span><br></pre></td></tr></table></figure>
+
+<p>此时，服务器s3已启动并正在运行，已加入该组并赶上该组中的其他服务器。performance_schema.replication_group_members 再次咨询 表证实了这种情况。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; SELECT * FROM performance_schema.replication_group_members;</span><br><span class="line">+---------------------------+--------------------------------------+-------------+-------------+---------------+</span><br><span class="line">| CHANNEL_NAME              | MEMBER_ID                            | MEMBER_HOST | MEMBER_PORT | MEMBER_STATE  |</span><br><span class="line">+---------------------------+--------------------------------------+-------------+-------------+---------------+</span><br><span class="line">| group_replication_applier | 395409e1-6dfa-11e6-970b-00212844f856 | myhost      |       24801 | ONLINE        |</span><br><span class="line">| group_replication_applier | 7eb217ff-6df3-11e6-966c-00212844f856 | myhost      |       24803 | ONLINE        |</span><br><span class="line">| group_replication_applier | ac39f1e6-6dfa-11e6-a69d-00212844f856 | myhost      |       24802 | ONLINE        |</span><br><span class="line">+---------------------------+--------------------------------------+-------------+-------------+---------------+</span><br></pre></td></tr></table></figure>
+
+<p>在服务器s2或服务器s1上发出相同的查询会产生相同的结果。此外，您可以验证服务器s3是否也赶上了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; SHOW DATABASES LIKE &#39;test&#39;;</span><br><span class="line">+-----------------+</span><br><span class="line">| Database (test) |</span><br><span class="line">+-----------------+</span><br><span class="line">| test            |</span><br><span class="line">+-----------------+</span><br><span class="line"></span><br><span class="line">mysql&gt; SELECT * FROM test.t1;</span><br><span class="line">+----+------+</span><br><span class="line">| c1 | c2   |</span><br><span class="line">+----+------+</span><br><span class="line">|  1 | Luis |</span><br><span class="line">+----+------+</span><br><span class="line"></span><br><span class="line">mysql&gt; SHOW BINLOG EVENTS;</span><br><span class="line">+---------------+------+----------------+-----------+-------------+--------------------------------------------------------------------+</span><br><span class="line">| Log_name      | Pos  | Event_type     | Server_id | End_log_pos | Info                                                               |</span><br><span class="line">+---------------+------+----------------+-----------+-------------+--------------------------------------------------------------------+</span><br><span class="line">| binlog.000001 |    4 | Format_desc    |         3 |         123 | Server ver: 8.0.3-log, Binlog ver: 4                              |</span><br><span class="line">| binlog.000001 |  123 | Previous_gtids |         3 |         150 |                                                                    |</span><br><span class="line">| binlog.000001 |  150 | Gtid           |         1 |         211 | SET @@SESSION.GTID_NEXT&#x3D; &#39;aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa:1&#39;  |</span><br><span class="line">| binlog.000001 |  211 | Query          |         1 |         270 | BEGIN                                                              |</span><br><span class="line">| binlog.000001 |  270 | View_change    |         1 |         369 | view_id&#x3D;14724832985483517:1                                        |</span><br><span class="line">| binlog.000001 |  369 | Query          |         1 |         434 | COMMIT                                                             |</span><br><span class="line">| binlog.000001 |  434 | Gtid           |         1 |         495 | SET @@SESSION.GTID_NEXT&#x3D; &#39;aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa:2&#39;  |</span><br><span class="line">| binlog.000001 |  495 | Query          |         1 |         585 | CREATE DATABASE test                                               |</span><br><span class="line">| binlog.000001 |  585 | Gtid           |         1 |         646 | SET @@SESSION.GTID_NEXT&#x3D; &#39;aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa:3&#39;  |</span><br><span class="line">| binlog.000001 |  646 | Query          |         1 |         770 | use &#96;test&#96;; CREATE TABLE t1 (c1 INT PRIMARY KEY, c2 TEXT NOT NULL) |</span><br><span class="line">| binlog.000001 |  770 | Gtid           |         1 |         831 | SET @@SESSION.GTID_NEXT&#x3D; &#39;aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa:4&#39;  |</span><br><span class="line">| binlog.000001 |  831 | Query          |         1 |         890 | BEGIN                                                              |</span><br><span class="line">| binlog.000001 |  890 | Table_map      |         1 |         933 | table_id: 108 (test.t1)                                            |</span><br><span class="line">| binlog.000001 |  933 | Write_rows     |         1 |         975 | table_id: 108 flags: STMT_END_F                                    |</span><br><span class="line">| binlog.000001 |  975 | Xid            |         1 |        1002 | COMMIT &#x2F;* xid&#x3D;29 *&#x2F;                                                |</span><br><span class="line">| binlog.000001 | 1002 | Gtid           |         1 |        1063 | SET @@SESSION.GTID_NEXT&#x3D; &#39;aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa:5&#39;  |</span><br><span class="line">| binlog.000001 | 1063 | Query          |         1 |        1122 | BEGIN                                                              |</span><br><span class="line">| binlog.000001 | 1122 | View_change    |         1 |        1261 | view_id&#x3D;14724832985483517:2                                        |</span><br><span class="line">| binlog.000001 | 1261 | Query          |         1 |        1326 | COMMIT                                                             |</span><br><span class="line">| binlog.000001 | 1326 | Gtid           |         1 |        1387 | SET @@SESSION.GTID_NEXT&#x3D; &#39;aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa:6&#39;  |</span><br><span class="line">| binlog.000001 | 1387 | Query          |         1 |        1446 | BEGIN                                                              |</span><br><span class="line">| binlog.000001 | 1446 | View_change    |         1 |        1585 | view_id&#x3D;14724832985483517:3                                        |</span><br><span class="line">| binlog.000001 | 1585 | Query          |         1 |        1650 | COMMIT                                                             |</span><br><span class="line">+---------------+------+----------------+-----------+-------------+--------------------------------------------------------------------+</span><br></pre></td></tr></table></figure>
+
+  	</div>
+	  
+	  <div class="article-tags tags">
+      
+        <a href="/tags/mysql/">mysql</a>
+      
+        <a href="/tags/mgr/">mgr</a>
+      
+	  </div>
+    
+		
+	
+		<div class="art-item-footer">
+				
+					<span class="art-item-left"><i class="icon icon-chevron-thin-left"></i>prev：<a href="/2019/02/07/k8s/" rel="prev"  title="Kubernetes 离线安装">
+						Kubernetes 离线安装 
+					</a></span>
+				
+				
+					<span class="art-item-right">next：<a href="/2019/01/29/powerline/" rel="next"  title="使用 Powerline 美化终端">
+						使用 Powerline 美化终端
+					</a><i class="icon icon-chevron-thin-right"></i></span>
+				
+		</div>
+	
+	</section>
+	
+</article>
+<script>
+	window.subData = {
+		title: 'MySQL 组复制',
+		tools: true
+	}
+</script>
+
+      </div>
+      <aside class='l_side'>
+        
+  <section class='m_widget categories'>
+<div class='header'>类别</div>
+<div class='content'>
+    
+    <ul class="entry">
+    
+        <li><a class="flat-box" href="/categories/database/"><div class='name'>database</div><div class='badget'>7</div></a></li>
+    
+        <li><a class="flat-box" href="/categories/go/"><div class='name'>go</div><div class='badget'>5</div></a></li>
+    
+        <li><a class="flat-box" href="/categories/linux/"><div class='name'>linux</div><div class='badget'>30</div></a></li>
+    
+        <li><a class="flat-box" href="/categories/mac/"><div class='name'>mac</div><div class='badget'>1</div></a></li>
+    
+        <li><a class="flat-box" href="/categories/monitor/"><div class='name'>monitor</div><div class='badget'>4</div></a></li>
+    
+        <li><a class="flat-box" href="/categories/python/"><div class='name'>python</div><div class='badget'>1</div></a></li>
+    
+        <li><a class="flat-box" href="/categories/shell/"><div class='name'>shell</div><div class='badget'>1</div></a></li>
+    
+        <li><a class="flat-box" href="/categories/tools/"><div class='name'>tools</div><div class='badget'>13</div></a></li>
+    
+    </ul>
+    
+</div>
+</section>
+
+  
+<div class="m_widget tagcloud">
+    <div class="header">标签</div>
+    <div class='content'>
+        <a href="/tags/CI-CD/" style="font-size: 14px; color: #808080">CI/CD</a> <a href="/tags/Kubernetes/" style="font-size: 15.2px; color: #666">Kubernetes</a> <a href="/tags/ambari/" style="font-size: 14px; color: #808080">ambari</a> <a href="/tags/ansible/" style="font-size: 14px; color: #808080">ansible</a> <a href="/tags/archlinux/" style="font-size: 14px; color: #808080">archlinux</a> <a href="/tags/docker/" style="font-size: 18.8px; color: #1a1a1a">docker</a> <a href="/tags/ftp/" style="font-size: 14px; color: #808080">ftp</a> <a href="/tags/git/" style="font-size: 16.4px; color: #4d4d4d">git</a> <a href="/tags/gitlab/" style="font-size: 14px; color: #808080">gitlab</a> <a href="/tags/go/" style="font-size: 16.4px; color: #4d4d4d">go</a> <a href="/tags/golang/" style="font-size: 14px; color: #808080">golang</a> <a href="/tags/grafana/" style="font-size: 14px; color: #808080">grafana</a> <a href="/tags/hadoop/" style="font-size: 15.2px; color: #666">hadoop</a> <a href="/tags/hexo/" style="font-size: 14px; color: #808080">hexo</a> <a href="/tags/jekyll/" style="font-size: 14px; color: #808080">jekyll</a> <a href="/tags/jenkins/" style="font-size: 16.4px; color: #4d4d4d">jenkins</a> <a href="/tags/journald/" style="font-size: 14px; color: #808080">journald</a> <a href="/tags/keepalive/" style="font-size: 14px; color: #808080">keepalive</a> <a href="/tags/kubernetes/" style="font-size: 14px; color: #808080">kubernetes</a> <a href="/tags/ldap/" style="font-size: 14px; color: #808080">ldap</a> <a href="/tags/linux/" style="font-size: 20px; color: #000">linux</a> <a href="/tags/lvs/" style="font-size: 14px; color: #808080">lvs</a> <a href="/tags/mac/" style="font-size: 14px; color: #808080">mac</a> <a href="/tags/mgr/" style="font-size: 14px; color: #808080">mgr</a> <a href="/tags/mysql/" style="font-size: 18.8px; color: #1a1a1a">mysql</a> <a href="/tags/network/" style="font-size: 14px; color: #808080">network</a> <a href="/tags/nginx/" style="font-size: 14px; color: #808080">nginx</a> <a href="/tags/nmcli/" style="font-size: 15.2px; color: #666">nmcli</a> <a href="/tags/nodejs/" style="font-size: 15.2px; color: #666">nodejs</a> <a href="/tags/oracle/" style="font-size: 14px; color: #808080">oracle</a> <a href="/tags/pip/" style="font-size: 14px; color: #808080">pip</a> <a href="/tags/powerline/" style="font-size: 14px; color: #808080">powerline</a> <a href="/tags/powershell/" style="font-size: 14px; color: #808080">powershell</a> <a href="/tags/prometheus/" style="font-size: 14px; color: #808080">prometheus</a> <a href="/tags/python/" style="font-size: 17.6px; color: #333">python</a> <a href="/tags/raspberrypi/" style="font-size: 14px; color: #808080">raspberrypi</a> <a href="/tags/replication/" style="font-size: 14px; color: #808080">replication</a> <a href="/tags/ruby/" style="font-size: 14px; color: #808080">ruby</a> <a href="/tags/selinux/" style="font-size: 14px; color: #808080">selinux</a> <a href="/tags/shell/" style="font-size: 16.4px; color: #4d4d4d">shell</a> <a href="/tags/svn/" style="font-size: 14px; color: #808080">svn</a> <a href="/tags/systemd/" style="font-size: 14px; color: #808080">systemd</a> <a href="/tags/tomcat/" style="font-size: 15.2px; color: #666">tomcat</a> <a href="/tags/ubuntu/" style="font-size: 14px; color: #808080">ubuntu</a> <a href="/tags/vagrant/" style="font-size: 14px; color: #808080">vagrant</a> <a href="/tags/virtualbox/" style="font-size: 15.2px; color: #666">virtualbox</a> <a href="/tags/windows/" style="font-size: 15.2px; color: #666">windows</a> <a href="/tags/wsl/" style="font-size: 14px; color: #808080">wsl</a> <a href="/tags/zabbix/" style="font-size: 17.6px; color: #333">zabbix</a>
+    </div>
+</div>
+
+
+
+  <section class='m_widget links'>
+<div class='header'>链接</div>
+<div class='content'>
+    <ul class="entry">
+    
+        <li><a class="flat-box" target="_blank" href="https://github.com/todevops">
+            <div class='name'>ToDevOps</div>
+        </a></li>
+    
+    </ul>
+</div>
+</section>
+
+      </aside>
+      <script>setLoadingBarProgress(60);</script>
+    </div>
+  </div>
+  <footer id="footer" class="clearfix">
+
+	<div class="social-wrapper">
+  	
+      
+        <a href="https://github.com/todevops" class="social github"
+          target="_blank" rel="external">
+          <span class="icon icon-github"></span>
+        </a>
+      
+    
+  </div>
+  
+  <div><a href='https://todevops.github.io' target="_blank" rel="noopener" class="codename">todevops</a>&copy; by Jeremy</a>.</div>
+  
+</footer>
+
+
+  <script>setLoadingBarProgress(80);</script>
+  
+
+<script src="//apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src='//cdn.bootcss.com/node-waves/0.7.5/waves.min.js'></script>
+<script src="//cdn.bootcss.com/scrollReveal.js/3.3.2/scrollreveal.min.js"></script>
+
+<script src="/js/jquery.fitvids.js"></script>
+
+<script>
+	var GOOGLE_CUSTOM_SEARCH_API_KEY = "";
+	var GOOGLE_CUSTOM_SEARCH_ENGINE_ID = "";
+	var ALGOLIA_API_KEY = "";
+	var ALGOLIA_APP_ID = "";
+	var ALGOLIA_INDEX_NAME = "";
+  var AZURE_SERVICE_NAME = "";
+  var AZURE_INDEX_NAME = "";
+  var AZURE_QUERY_KEY = "";
+  var BAIDU_API_ID = "";
+  var SEARCH_SERVICE = "hexo";
+  var ROOT = "/"||"/";
+  if(!ROOT.endsWith('/'))ROOT += '/';
+</script>
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/app.js"></script>
+
+
+
+  <script>setLoadingBarProgress(100);</script>
+</body>
+</html>
